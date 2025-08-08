@@ -163,19 +163,22 @@ private fun performValidation(
     onResult: (valid: Boolean, comment: String, followUp: String) -> Unit
 ) {
     if (answer.isBlank()) return
+
     val prompt = """
-You are an expert survey analyst. Evaluate the following respondent’s free-text answer against these criteria:
-1. Relevance: Does it directly address the question?
-2. Specificity: Does it name concrete issues or examples?
-3. Detail: Is there enough context to be actionable?
+You are a highly skilled survey analyst. Please evaluate the respondent’s free-text answer based on the following criteria:
 
-Respond in exactly three lines using this format:
-VALIDATION: Yes or No
-COMMENT: (If No, suggest a follow-up question; if Yes, write a brief positive remark)
-FOLLOW_UP_QUESTION: (One concise follow-up question)
+1. Relevance — Does it directly respond to the survey question?
+2. Specificity — Does it mention concrete issues, examples, or details?
+3. Actionability — Is there enough context to understand or take action?
 
-Survey Question: \$question
-Answer: \$answer
+Your response must be **exactly three lines**, using this format:
+
+VALIDATION: Yes or No  
+COMMENT: (If No, provide a constructive reason and suggest a better way to answer. If Yes, give a brief positive remark.)  
+FOLLOW_UP_QUESTION: (A concise and relevant follow-up question that encourages deeper insight)
+
+Survey Question: $question  
+Answer: $answer
 """.trimIndent()
 
     manager.generateResponseAsync(prompt) { raw ->
