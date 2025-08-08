@@ -108,6 +108,46 @@ Answer: $answer
 * `LLMManager` のモックを使ったレスポンス解析テスト
 * `ChatSurveyScreen` の UI テスト（Compose Testing API）
 
+## モデルダウンロードスクリプト
+
+プロジェクト内の `src/main/assets/models` フォルダにモデルファイルを一括でダウンロードするための Bash スクリプトです。
+
+### スクリプト概要
+
+* ファイル名: `download_models.sh`
+* デフォルト動作: `gemma3-1b-it-int8.task` をダウンロード
+* 指定したファイルが存在しない場合にのみダウンロード
+* `HF_TOKEN` 環境変数で Hugging Face のアクセストークンを指定する必要があります。
+
+### 使い方
+
+```bash
+# スクリプトに実行権限を付与
+chmod +x download_models.sh
+
+# デフォルトモデルをダウンロード
+./download_models.sh
+
+# 複数ファイルを指定してダウンロード
+./download_models.sh gemma3-1b-it-int4.task gemma3-1b-it-int16.task
+```
+
+#### 環境変数
+
+* `HF_TOKEN`: Hugging Face API トークン。プライベートリポジトリから取得する場合に必須。
+
+  ```bash
+  export HF_TOKEN="your_hf_token_here"
+  ```
+
+#### スクリプトのロジック
+
+1. 環境変数 `HF_TOKEN` が未設定の場合はエラー終了。
+2. ダウンロード対象ファイルのリスト (`MODEL_FILES`) を引数またはデフォルトで決定。
+3. `src/main/assets/models` フォルダを作成し、移動。
+4. 各ファイルが存在しなければ、`curl` or `wget` でダウンロード。
+5. ダウンロード成功を検証し、状況をログ出力。
+
 ## ライセンス
 
 MIT License
